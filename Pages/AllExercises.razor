@@ -9,7 +9,9 @@
 
 @if (_exercises == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
 }
 else
 {
@@ -20,7 +22,7 @@ else
             <tr>
                 <th>Exercise</th>
                 <th>Body Part</th>
-                <th>Muscle Group</th>
+                <th>Target Muscle</th>
                 <th>Demonstration</th>
             </tr>
         </thead>
@@ -30,7 +32,7 @@ else
                 <tr>
                     <td>@ex.Name</td>
                     <td>@ex.BodyPart</td>
-                    <td>@ex.MuscleGroup</td>
+                    <td>@ex.TargetMuscle</td>
                     <td><img src="@ex.GifUrl"></td>
                 </tr>
             }

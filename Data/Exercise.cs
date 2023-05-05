@@ -9,7 +9,7 @@ namespace AnywhereFit.Data
         [JsonPropertyName("bodyPart")]
         public string BodyPart { get; set; } = null!;
         [JsonPropertyName("target")]
-        public string MuscleGroup { get; set; } = null!;
+        public string TargetMuscle { get; set; } = null!;
         [JsonPropertyName("gifUrl")]
         public string GifUrl { get; set; } = null!;
         [JsonPropertyName("equipment")]

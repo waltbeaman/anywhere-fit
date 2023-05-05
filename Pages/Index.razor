@@ -1,9 +1,46 @@
 ﻿@page "/"
+@inject NavigationManager Navigation
+@layout NoMenuLayout
 
-<PageTitle>Index</PageTitle>
+<PageTitle>AnywhereFit</PageTitle>
 
-<h1>Hello, world!</h1>
+<br />
 
-Welcome to your new app.
+<h1 class="">AnywhereFit</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<br />
+
+<p>Welcome to AnywhereFit. This app is designed to guide you through a quick and effective workout that you can do anywhere without a gym or equipment.</p>
+
+<br />
+<br />
+
+<div class="container-md text-center">
+    <div class="row">
+        <div class="col p-2">
+            <div class="container-sm border border-5 border-dark rounded-circle p-5">
+                <img src="images/man.png" /><br /><br />
+                <button type="button" class="btn btn-dark btn-lg" @onclick="NewWorkout">Workout!</button>
+            </div>
+
+        </div>
+        <div class="col p-2">
+            <div class="container-sm border border-5 border-dark rounded-circle p-5">
+                <img src="images/progression.png" /><br /><br />
+                <button type="button" class="btn btn-dark btn-lg" @onclick="ViewProgress">View Progress</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void NewWorkout()
+    {
+        Navigation.NavigateTo("newworkout");
+    }
+
+    private void ViewProgress()
+    {
+        Navigation.NavigateTo("viewprogress");
+    }
+}

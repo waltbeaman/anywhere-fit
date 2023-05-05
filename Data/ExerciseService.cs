@@ -36,13 +36,33 @@ namespace AnywhereFit.Data
 
         }
 
-        public async Task<List<Exercise>> GetCustomExercises()
+        public async Task<List<Exercise>> GetExercisesByType(string workoutType)
         {
-            var exercises = await GetExercises(); 
+            List<Exercise> exercisesByType = new List<Exercise>();
 
+            List<string> upperBody = new List<string> { "back", "chest", "lower arms", "upper arms", "neck", "shoulders" };
+            List<string> lowerBody = new List<string> { "lower legs", "upper legs", "waist" };
 
+            var exercises = await GetExercises();
 
-            return new List<Exercise>();
+            if (workoutType == "Upper Body")
+            {
+                exercisesByType = exercises.Where(e => upperBody.Contains(e.BodyPart)).ToList();
+            }
+            else if (workoutType == "Lower Body")
+            {
+                exercisesByType = exercises.Where(e => lowerBody.Contains(e.BodyPart)).ToList();
+            }
+            else if (workoutType == "Full Body")
+            {
+                exercisesByType = exercises;
+            }
+            else // Cardio
+            {
+                exercisesByType = exercises.Where(e => e.BodyPart.Equals("cardio")).ToList();
+            }
+
+            return exercisesByType;
         }
     }
 }
