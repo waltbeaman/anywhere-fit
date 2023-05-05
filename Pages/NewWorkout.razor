@@ -1,5 +1,6 @@
 ﻿@page "/newworkout"
 @using AnywhereFit.Data
+@inject NavigationManager Navigation
 
 <PageTitle>New Workout</PageTitle>
 
@@ -9,7 +10,7 @@
 
 <hr />
 
-@if (!isWorkoutCreated)
+@if (workoutState == _workoutState.New)
 {
     <div class="form-group">
         <label for="numExercises">Number of Exercises:</label>
@@ -32,24 +33,62 @@
         </select>
     </div>
     <br />
-    <button type="submit" class="btn btn-success" @onclick="HideDivTest">Create Workout</button>
+    <button type="submit" class="btn btn-primary" @onclick="CreateWorkout">Create Workout</button>
+}
+else if (workoutState == _workoutState.Created)
+{
+    @*TODO: Add while loop to cycle through exercise cards. *@
+    <p>Are you ready to get after it? (placeholder)</p>
+    <button type="submit" class="btn btn-success" @onclick="StartWorkout">Start Workout</button>
+}
+else if (workoutState == _workoutState.WorkingOut)
+{
+    <p>Doing my workout! (placeholder)</p>
+    <button type="submit" class="btn btn-info" @onclick="FinishWorkout">Finish Workout</button>
+}
+else if (workoutState == _workoutState.Finished)
+{
+    <p>You killed it! Great job! (placeholder)</p>
+    <button type="submit" class="btn btn-primary" @onclick="SaveWorkout">Finish Workout</button>
 }
 else
 {
-    @*TODO: Add while loop to cycle through exercise cards. *@
-    <p>Doing my workout! (placeholder)</p>
-    <button type="submit" class="btn btn-danger" @onclick="HideDivTest">Finish Workout</button>
+    <p>Workout has been saved! (placeholder)</p>
+    <button type="submit" class="btn btn-warning" @onclick="ExitWorkout">Exit</button>
 }
+
 
 
 
 @code {
-    private bool isWorkoutCreated { get; set; } = false;
     private int _numExercises { get; set; } = 5;
     private string _workoutType { get; set; } = "Upper Body";
+    private enum _workoutState { New, Created, WorkingOut, Finished, Save };
 
-    private void HideDivTest()
+    _workoutState workoutState = _workoutState.New;
+
+    private void CreateWorkout()
     {
-        isWorkoutCreated = !isWorkoutCreated;
+        workoutState = _workoutState.Created;
+    }
+
+    private void StartWorkout()
+    {
+        workoutState = _workoutState.WorkingOut;
+    }
+
+    private void FinishWorkout()
+    {
+        workoutState = _workoutState.Finished;
+    }
+
+    private void SaveWorkout()
+    {
+        workoutState = _workoutState.Save;
+    }
+
+    private void ExitWorkout()
+    {
+        Navigation.NavigateTo("/");
     }
 }

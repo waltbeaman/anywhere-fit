@@ -36,7 +36,7 @@ namespace AnywhereFit.Data
 
         }
 
-        public async Task<List<Exercise>> GetExercisesByType(string workoutType)
+        public async Task<List<Exercise>> GetExercisesByType(string workoutType, int numExercises)
         {
             List<Exercise> exercisesByType = new List<Exercise>();
 
@@ -62,7 +62,10 @@ namespace AnywhereFit.Data
                 exercisesByType = exercises.Where(e => e.BodyPart.Equals("cardio")).ToList();
             }
 
-            return exercisesByType;
+            Random random = new Random();
+            var results = exercisesByType.OrderBy(e => random.Next()).Take(numExercises).ToList();
+
+            return results;
         }
     }
 }
