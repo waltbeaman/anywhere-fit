@@ -1,6 +1,9 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">AnywhereFit</a>
+        <a class="navbar-brand" href="">
+            <img src="images/muscle.png" alt="Flexed Arm" style="width:30px;" />
+            &nbsp;AnywhereFit
+        </a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,8 +18,13 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="newworkout">
-                <span class="oi oi-plus" aria-hidden="true"></span> Start New Workout
+            <NavLink class="nav-link" href="workout">
+                <span class="oi oi-plus" aria-hidden="true"></span> New Workout
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="viewprogress">
+                <span class="oi oi-plus" aria-hidden="true"></span> View Progress
             </NavLink>
         </div>
         <div class="nav-item px-3">

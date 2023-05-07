@@ -1,0 +1,52 @@
+﻿@inject NavigationManager Navigation
+
+<br />
+
+<div class="text-center"><h1>AnywhereFit</h1></div>
+
+<br />
+
+<p class="text-center">Welcome to AnywhereFit. This app is designed to guide you through a quick and effective workout that you can do anywhere without a gym or equipment. Make a selection below to get started.</p>
+
+<br />
+<br />
+
+<div class="container-md flex-wrap d-flex align-items-center justify-content-center">
+    <div class="row">
+        <div class="col p-2">
+            <div class="card" style="min-width: 300px; max-width: 400px;">
+                <img class="card-img-top p-3 border" src="images/man.png" alt="Workout" />
+                <div class="card-body border">
+                    <p class="card-text">If you're ready to dive right in, click the button to start a new workout now.</p>
+                    <button type="button" class="btn btn-primary" @onclick="NewWorkout">Workout!</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col p-2">
+            <div class="card" style="min-width: 300px; max-width: 400px;">
+                <img class="card-img-top p-3 border" src="images/progression.png" alt="Progress" />
+                <div class="card-body border">
+                    <p class="card-text">If you've completed some workouts before, click below to view your progression.</p>
+                    @* TODO: Disable button or card completely if current user doesn't have workout history. *@
+                    <button type="button" class="btn btn-primary" @onclick="ViewProgress">View Progress</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+@* TODO: Add link to view all available exercises. *@
+
+@code {
+    private void NewWorkout()
+    {
+        Navigation.NavigateTo("workout");
+    }
+
+    private void ViewProgress()
+    {
+        Navigation.NavigateTo("viewprogress");
+    }
+}

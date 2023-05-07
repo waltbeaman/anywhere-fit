@@ -59,35 +59,5 @@ namespace AnywhereFit.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] graphic_progression {
-            get {
-                object obj = ResourceManager.GetObject("graphic-progression", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] man {
-            get {
-                object obj = ResourceManager.GetObject("man", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] muscle {
-            get {
-                object obj = ResourceManager.GetObject("muscle", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

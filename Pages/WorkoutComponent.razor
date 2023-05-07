@@ -1,0 +1,261 @@
+﻿@using AnywhereFit.Data
+@using System.Timers
+
+@inject NavigationManager Navigation
+@inject ExerciseService ExerciseService
+
+<h1>@_pageTitle</h1>
+
+@* TODO: Breakout each component (workout stage/state) into individual razor components. *@
+@if (workoutState == _workoutState.New)
+{
+    <div class="form-group">
+        <label for="numExercises">Number of Exercises:</label>
+        <select class="form-control" style="max-width: 5rem;" id="numExercises" @bind="_numExercises">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+        </select>
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="workoutType">Workout Type:</label>
+        <select class="form-control" style="max-width: 15rem;" id="workoutType" @bind="_workoutType">
+            <option value="Upper Body">Upper Body</option>
+            <option value="Lower Body">Lower Body</option>
+            <option value="Full Body">Full Body</option>
+            <option value="Cardio">Cardio</option>
+        </select>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary" @onclick="CreateWorkout">Create Workout</button>
+}
+else if (workoutState == _workoutState.Created)
+{
+    @if (_exercises == null)
+    {
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    }
+    else
+    {
+        <p>
+            Are you ready to get after it?
+            <button type="submit" class="btn btn-success" @onclick="StartWorkout">Start Workout</button>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Exercise</th>
+                    <th>Body Part</th>
+                    <th>Target Muscle</th>
+                    <th>Demonstration</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ex in _exercises)
+                {
+                    <tr>
+                        <td>@ex.Name.ToUpper()</td>
+                        <td>@ex.BodyPart.ToUpper()</td>
+                        <td>@ex.TargetMuscle.ToUpper()</td>
+                        <td><img src="@ex.GifUrl"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+}
+else if (workoutState == _workoutState.WorkingOut)
+{
+    @*TODO: Move exercise cards to separate Razor component. *@
+
+    <div class="container-md text-center">
+        <div class="row">
+            <div class="col p-2">
+                <div class="container-xl" style="max-width:400px; min-width:300px;">
+                    <h4 class="text-center">@_exercises[_currentExercise].Name.ToUpper()</h4><br />
+                    <img class="card-img-top border" src="@_exercises[_currentExercise].GifUrl">
+                </div>
+            </div>
+            <div class="col p-2">
+                <div class="container-xl" style="min-width:300px;">
+                    <div class="m-3">
+                        <div class="d-flex align-items-center justify-content-center m-3">
+                            <button @onclick="StartExercise" class="btn btn-primary m-1">Start Exercise</button>
+                            <input type="number" class="form-control m-1" style="width: 6rem;" placeholder="Reps" @bind="_exercises[_currentExercise].Reps">
+                        </div>
+                        <div class="progress m-1" style="height: 3rem; position: relative;">
+                            <div class="progress-bar @(_isExercising ? "bg-info" : "bg-success")" role="progressbar" style="width: @_progressPercentage%;" aria-valuenow="@_progressPercentage" aria-valuemin="0" aria-valuemax="100">
+                                <span class="countdown-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: black; font-weight: bold; font-size: 16px;">
+                                    @(_isExercising ? "Exercise time: " : "Rest time: ")@_timeLeft seconds
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @if (_currentExercise > 0)
+                    {
+                        <button type="submit" class="btn btn-warning m-2" @onclick="PreviousExercise">Previous Exercise</button>
+                    }
+                    @if (_currentExercise < _exercises.Count() - 1)
+                    {
+                        <button type="submit" class="btn btn-warning m-2" @onclick="NextExercise">Next Exercise</button>
+                    }
+                    @if (_currentExercise == _exercises.Count() - 1)
+                    {
+                        <button type="submit" class="btn btn-success m-2" @onclick="SaveWorkout">Finish Workout</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else if (workoutState == _workoutState.Finished)
+{
+    <p>You killed it! Great job! (placeholder)</p>
+    <button type="submit" class="btn btn-primary" @onclick="SaveWorkout">Finish Workout</button>
+}
+else
+{
+    <p>Workout has been saved! (placeholder)</p>
+    <button type="submit" class="btn btn-warning" @onclick="ExitWorkout">Exit</button>
+}
+
+
+
+
+@code {
+    // Workout/exercise control variables
+    private List<Exercise>? _exercises;
+    private int _currentExercise = 0;
+    private int _numExercises { get; set; } = 5;
+    private string _workoutType { get; set; } = "Upper Body";
+    private enum _workoutState { New, Created, WorkingOut, Finished, Save };
+    private string _pageTitle = "Create Workout";
+
+    // Timer variables
+    private int _exerciseDuration = 60;
+    private int _restDuration = 10;
+    private int _timeLeft;
+    private Timer _timer = null!;
+    private bool _isExercising = true;
+    private double _progressPercentage;
+    private int _completedCycles = 0;
+
+    _workoutState workoutState = _workoutState.New;
+
+    private async Task CreateWorkout()
+    {
+        _exercises = await ExerciseService.GetExercisesByType(_workoutType, _numExercises);
+        workoutState = _workoutState.Created;
+        _pageTitle = "Preview Workout";
+    }
+
+    private void StartWorkout()
+    {
+        workoutState = _workoutState.WorkingOut;
+        _pageTitle = "Workout";
+    }
+
+    private void NextExercise()
+    {
+        // TODO: Add modal warning to confirm if time left or reps is blank
+        // TODO: Handle/store user-input: reps
+        _currentExercise++;
+        ResetTimer();
+    }
+
+    private void PreviousExercise()
+    {
+        // TODO: Add modal warning to confirm if timer has time left
+        _currentExercise--;
+        ResetTimer();
+    }
+
+    private void FinishWorkout()
+    {
+        workoutState = _workoutState.Finished;
+        _pageTitle = "Workout Complete";
+    }
+
+    private void SaveWorkout()
+    {
+        workoutState = _workoutState.Save;
+    }
+
+    private void ExitWorkout()
+    {
+        // TODO: Add modal confirmation pop-up before leaving workout
+        Navigation.NavigateTo("/");
+    }
+
+
+    // Timer methods
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _timer = new Timer(1000);
+        _timer.Elapsed += OnTimerElapsed;
+        _timer.AutoReset = true;
+        _timer.Enabled = false;
+    }
+
+    private void StartExercise()
+    {
+        _isExercising = true;
+        _timeLeft = _exerciseDuration;
+        _timer.Enabled = true;
+    }
+
+    private void StopTimer()
+    {
+        _timer.Enabled = false;
+    }
+
+    private void ResetTimer()
+    {
+        _timer.Enabled = false;
+        _isExercising = true;
+        _timeLeft = _exerciseDuration;
+        _completedCycles = 0;
+        _progressPercentage = 0;
+        StateHasChanged();
+    }
+
+    private async void OnTimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        if (_timeLeft > 0)
+        {
+            _timeLeft--;
+        }
+        else
+        {
+            _timer.Enabled = false;
+            if (_completedCycles < 1)
+            {
+                _isExercising = !_isExercising;
+                _timeLeft = _isExercising ? _exerciseDuration : _restDuration;
+                _timer.Enabled = true;
+            }
+            _completedCycles++;
+        }
+
+        // Start empty and fill as timer counts down
+        //_progressPercentage = (1.0 - (double)_timeLeft / (_isExercising ? _exerciseDuration : _restDuration)) * 100;
+
+        // Start full and empty as timer counts down
+        _progressPercentage = (double)_timeLeft / (_isExercising ? _exerciseDuration : _restDuration) * 100;
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+}

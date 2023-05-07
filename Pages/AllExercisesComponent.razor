@@ -1,0 +1,46 @@
+﻿@using AnywhereFit.Data
+@inject ExerciseService ExerciseService
+
+<h1>Exercise Listing</h1>
+
+@if (_exercises == null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <p>A complete listing of all @_exercises.Count() exercises.</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Exercise</th>
+                <th>Body Part</th>
+                <th>Target Muscle</th>
+                <th>Demonstration</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ex in _exercises)
+            {
+                <tr>
+                    <td>@ex.Name</td>
+                    <td>@ex.BodyPart</td>
+                    <td>@ex.TargetMuscle</td>
+                    <td><img src="@ex.GifUrl"></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Exercise>? _exercises;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _exercises = await ExerciseService.GetExercises();
+    }
+}
