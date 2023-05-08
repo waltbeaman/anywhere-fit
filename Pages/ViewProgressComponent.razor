@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 
 @inject UserManager<IdentityUser> UserManager
-@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
 @inject ExerciseService ExerciseService
 @inject IWorkoutLogStorage WorkoutLogStorage
 
@@ -40,6 +40,18 @@ else
     </table>
 }
 
+
+@* Dummy data buttons for DEV ONLY. Remove before moving to production. *@
+<div class="contianer">
+    <div class="row mt-5">
+        <div class="col text-center">
+            <button type="button" class="btn btn-sm btn-outline-success" @onclick="AddDummyData">Create Dummy Data</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" @onclick="DeleteDummyData">Delete Dummy Data</button>
+        </div>
+    </div>
+</div>
+
+
 @code {
     private List<Exercise>? _completedExercises;
 
@@ -56,5 +68,19 @@ else
 
         _completedExercises = await WorkoutLogStorage.GetAllUserExercisesAsync(_currentUserId);
 
+    }
+
+
+    //The following methods are for DEV ONLY. Do not move to production.
+    private async Task AddDummyData()
+    {
+        await WorkoutLogStorage.AddDummyDataAsync(_currentUserId);
+        NavigationManager.NavigateTo("/viewprogress", forceLoad: true);
+    }
+
+    private async Task DeleteDummyData()
+    {
+        await WorkoutLogStorage.DeleteDummyDataAsync(_currentUserId);
+        NavigationManager.NavigateTo("/viewprogress", forceLoad: true);
     }
 }
