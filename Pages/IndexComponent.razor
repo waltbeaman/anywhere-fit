@@ -1,4 +1,11 @@
 ﻿@inject NavigationManager Navigation
+@inject Microsoft.AspNetCore.Identity.UserManager<IdentityUser> UserManager
+@inject SignInManager<IdentityUser> SignInManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using AnywhereFit.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+
 
 <br />
 
@@ -6,7 +13,12 @@
 
 <br />
 
-<p class="text-center">Welcome to AnywhereFit. This app is designed to guide you through a quick and effective workout that you can do anywhere without a gym or equipment. Make a selection below to get started.</p>
+<p class="text-center">Welcome to AnywhereFit! This app is designed to guide you through a quick and effective workout that you can do anywhere without a gym or equipment. Make a selection below to get started.</p>
+@if (currentUserId != null)
+{
+    <p>Your user ID is: @currentUserId</p>
+}
+
 
 <br />
 <br />
@@ -40,6 +52,18 @@
 @* TODO: Add link to view all available exercises. *@
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> _authenticationStateTask { get; set; }
+    string currentUserId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await _authenticationStateTask).User;
+        var currentUser = await UserManager.GetUserAsync(user);
+        currentUserId = currentUser.Id;
+
+    }
     private void NewWorkout()
     {
         Navigation.NavigateTo("workout");

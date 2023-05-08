@@ -1,6 +1,8 @@
 ﻿@using AnywhereFit.Data
 @using System.Timers
+@using Microsoft.AspNetCore.Identity
 
+@inject UserManager<IdentityUser> UserManager
 @inject NavigationManager Navigation
 @inject ExerciseService ExerciseService
 
@@ -138,6 +140,9 @@ else
     private enum _workoutState { New, Created, WorkingOut, Finished, Save };
     private string _pageTitle = "Create Workout";
 
+    _workoutState workoutState = _workoutState.New;
+
+
     // Timer variables
     private int _exerciseDuration = 60;
     private int _restDuration = 10;
@@ -147,7 +152,19 @@ else
     private double _progressPercentage;
     private int _completedCycles = 0;
 
-    _workoutState workoutState = _workoutState.New;
+
+    // Get current user ID to save workout
+    [CascadingParameter]
+    private Task<AuthenticationState> _authenticationStateTask { get; set; }
+    string currentUserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await _authenticationStateTask).User;
+        var currentUser = await UserManager.GetUserAsync(user);
+        currentUserId = currentUser.Id;
+
+    }
 
     private async Task CreateWorkout()
     {
@@ -177,9 +194,11 @@ else
         ResetTimer();
     }
 
-    private void FinishWorkout()
+    private async Task FinishWorkout()
     {
         workoutState = _workoutState.Finished;
+
+
         _pageTitle = "Workout Complete";
     }
 

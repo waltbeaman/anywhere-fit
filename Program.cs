@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Net;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -21,8 +22,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient<ExerciseService>();
 builder.Services.AddDbContext<AnywhereFitContext>(options => options.UseSqlite(connectionString));
 
-builder.Services.AddDefaultIdentity<AnywhereFitUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AnywhereFitContext>();
-
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AnywhereFitContext>();
 
 var app = builder.Build();
 

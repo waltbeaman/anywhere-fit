@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace AnywhereFit.Data
@@ -6,8 +7,8 @@ namespace AnywhereFit.Data
     public class Exercise
     {
         [Key]
-        [JsonPropertyName("id")]
-        public string Id { get; set; } = null!;
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
@@ -27,6 +28,8 @@ namespace AnywhereFit.Data
         public int? Reps { get; set; }
 
         public DateTime? DateTime { get; set; }
+
+        public string? UserId { get; set; }
 
     }
 }
