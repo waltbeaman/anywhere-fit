@@ -7,6 +7,11 @@ namespace AnywhereFit.Data
     {
         private readonly AnywhereFitContext _dbContext;
 
+        public WorkoutLogStorage(AnywhereFitContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public async Task AddWorkoutAsync(List<Exercise> workout, string userId)
         {
             var now = DateTime.Now;

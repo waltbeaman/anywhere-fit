@@ -227,7 +227,7 @@ else
     private async Task SaveWorkout()
     {
         // TODO: Add modal warning to confirm save if any reps are left blank.
-
+        await WorkoutLogStorage.AddWorkoutAsync(_completedExercises, currentUserId);
         workoutState = _workoutState.Save;
     }
 
