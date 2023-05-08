@@ -5,6 +5,7 @@
 @inject UserManager<IdentityUser> UserManager
 @inject NavigationManager Navigation
 @inject ExerciseService ExerciseService
+@inject IWorkoutLogStorage WorkoutLogStorage
 
 <h1>@_pageTitle</h1>
 
@@ -89,7 +90,7 @@ else if (workoutState == _workoutState.WorkingOut)
                     <div class="m-3">
                         <div class="d-flex align-items-center justify-content-center m-3">
                             <button @onclick="StartExercise" class="btn btn-primary m-1">Start Exercise</button>
-                            <input type="number" class="form-control m-1" style="width: 6rem;" placeholder="Reps" @bind="_exercises[_currentExercise].Reps">
+                            <input type="number" class="form-control m-1" style="width: 6rem;" placeholder="Reps" @bind="_completedExercises[_currentExercise].Reps">
                         </div>
                         <div class="progress m-1" style="height: 3rem; position: relative;">
                             <div class="progress-bar @(_isExercising ? "bg-info" : "bg-success")" role="progressbar" style="width: @_progressPercentage%;" aria-valuenow="@_progressPercentage" aria-valuemin="0" aria-valuemax="100">
@@ -109,7 +110,7 @@ else if (workoutState == _workoutState.WorkingOut)
                     }
                     @if (_currentExercise == _exercises.Count() - 1)
                     {
-                        <button type="submit" class="btn btn-success m-2" @onclick="SaveWorkout">Finish Workout</button>
+                        <button type="submit" class="btn btn-success m-2" @onclick="FinishWorkout">Finish Workout</button>
                     }
                 </div>
             </div>
@@ -119,12 +120,33 @@ else if (workoutState == _workoutState.WorkingOut)
 }
 else if (workoutState == _workoutState.Finished)
 {
-    <p>You killed it! Great job! (placeholder)</p>
-    <button type="submit" class="btn btn-primary" @onclick="SaveWorkout">Finish Workout</button>
+    <p>You killed it! Great job! Here are your results:</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Exercise</th>
+                <th>Body Part</th>
+                <th>Target Muscle</th>
+                <th>Reps</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ex in _completedExercises)
+            {
+                <tr>
+                    <td>@ex.Name.ToUpper()</td>
+                    <td>@ex.BodyPart.ToUpper()</td>
+                    <td>@ex.TargetMuscle.ToUpper()</td>
+                    <td>@ex.Reps.ToString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary" @onclick="SaveWorkout">Save Workout</button>
 }
 else
 {
-    <p>Workout has been saved! (placeholder)</p>
+    <p>Workout has been saved!</p>
     <button type="submit" class="btn btn-warning" @onclick="ExitWorkout">Exit</button>
 }
 
@@ -133,7 +155,8 @@ else
 
 @code {
     // Workout/exercise control variables
-    private List<Exercise>? _exercises;
+    private List<ApiExercise>? _exercises;
+    private List<Exercise>? _completedExercises;
     private int _currentExercise = 0;
     private int _numExercises { get; set; } = 5;
     private string _workoutType { get; set; } = "Upper Body";
@@ -169,6 +192,7 @@ else
     private async Task CreateWorkout()
     {
         _exercises = await ExerciseService.GetExercisesByType(_workoutType, _numExercises);
+        _completedExercises = ExerciseService.GenerateWorkout(_exercises);
         workoutState = _workoutState.Created;
         _pageTitle = "Preview Workout";
     }
@@ -194,16 +218,16 @@ else
         ResetTimer();
     }
 
-    private async Task FinishWorkout()
+    private void FinishWorkout()
     {
         workoutState = _workoutState.Finished;
-
-
         _pageTitle = "Workout Complete";
     }
 
-    private void SaveWorkout()
+    private async Task SaveWorkout()
     {
+        // TODO: Add modal warning to confirm save if any reps are left blank.
+
         workoutState = _workoutState.Save;
     }
 

@@ -9,7 +9,7 @@
         <span class="visually-hidden">Loading...</span>
     </div>
 }
-else
+else // TODO: Show exercise listing as BS5 cards (smaller)
 {
     <p>A complete listing of all @_exercises.Count() exercises.</p>
 
@@ -37,7 +37,7 @@ else
 }
 
 @code {
-    private List<Exercise>? _exercises;
+    private List<ApiExercise>? _exercises;
 
     protected override async Task OnInitializedAsync()
     {

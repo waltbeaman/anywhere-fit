@@ -17,7 +17,7 @@ namespace AnywhereFit.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
 
-            modelBuilder.Entity("AnywhereFit.Data.Exercise", b =>
+            modelBuilder.Entity("AnywhereFit.Data.ApiExercise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

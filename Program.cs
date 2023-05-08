@@ -21,7 +21,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient<ExerciseService>();
 builder.Services.AddDbContext<AnywhereFitContext>(options => options.UseSqlite(connectionString));
-
+builder.Services.AddScoped<IWorkoutLogStorage, WorkoutLogStorage>();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AnywhereFitContext>();
 
 var app = builder.Build();

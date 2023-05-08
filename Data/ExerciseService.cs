@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Text.Json;
+using System.Linq;
 
 namespace AnywhereFit.Data
 {
@@ -15,7 +16,7 @@ namespace AnywhereFit.Data
             _config = config;
         }
 
-        public async Task<List<Exercise>> GetExercises()
+        public async Task<List<ApiExercise>> GetExercises()
         {
             // Build header & load RapidAPI Key
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -27,8 +28,8 @@ namespace AnywhereFit.Data
             response.EnsureSuccessStatusCode();
             var body = await response.Content.ReadAsStringAsync();
             
-            // Parse JSON objects into cleaner Exercise objects
-            var exercises = JsonSerializer.Deserialize<List<Exercise>>(body);
+            // Parse JSON objects into cleaner ApiExercise objects
+            var exercises = JsonSerializer.Deserialize<List<ApiExercise>>(body);
 
             //var refinedExercises = exercises.Where(e => e.Equipment.Equals("body weight")).ToList();
 
@@ -36,9 +37,9 @@ namespace AnywhereFit.Data
 
         }
 
-        public async Task<List<Exercise>> GetExercisesByType(string workoutType, int numExercises)
+        public async Task<List<ApiExercise>> GetExercisesByType(string workoutType, int numExercises)
         {
-            List<Exercise> exercisesByType = new List<Exercise>();
+            List<ApiExercise> exercisesByType = new List<ApiExercise>();
 
             List<string> upperBody = new List<string> { "back", "chest", "lower arms", "upper arms", "neck", "shoulders" };
             List<string> lowerBody = new List<string> { "lower legs", "upper legs", "waist" };
@@ -64,6 +65,20 @@ namespace AnywhereFit.Data
 
             Random random = new Random();
             var results = exercisesByType.OrderBy(e => random.Next()).Take(numExercises).ToList();
+
+            return results;
+        }
+
+
+        public List<Exercise> GenerateWorkout(List<ApiExercise> apiExercises)
+        {
+            List<Exercise> results = apiExercises.Select(apiEx => new Exercise
+            {
+                    Name = apiEx.Name,
+                    BodyPart = apiEx.BodyPart,
+                    Equipment = apiEx.Equipment,
+                    TargetMuscle = apiEx.TargetMuscle
+            }).ToList();
 
             return results;
         }
