@@ -1,0 +1,12 @@
+﻿@page "/"
+
+<PageTitle>AnywhereFit</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <IndexComponent />
+    </Authorized>
+    <NotAuthorized>
+        <NotLoggedInComponent />
+    </NotAuthorized>
+</AuthorizeView>

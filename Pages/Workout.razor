@@ -1,0 +1,12 @@
+﻿@page "/workout"
+
+<PageTitle>Workout</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <WorkoutComponent />
+    </Authorized>
+    <NotAuthorized>
+        <NotLoggedInComponent />
+    </NotAuthorized>
+</AuthorizeView>

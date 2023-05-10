@@ -1,0 +1,13 @@
+﻿@page "/allexercises"
+
+
+<PageTitle>Exercise Listing</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <AllExercisesComponent />
+    </Authorized>
+    <NotAuthorized>
+        <NotLoggedInComponent />
+    </NotAuthorized>
+</AuthorizeView>
