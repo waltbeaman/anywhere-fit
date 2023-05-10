@@ -1,5 +1,64 @@
-﻿<h3>ViewProgressCharts</h3>
+﻿@inject UserManager<IdentityUser> UserManager
+@inject IWorkoutLogStorage WorkoutLogStorage
+
+@if (_weeklyReps == null)
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <h3>Total Reps Completed By Week (Last 90 Days)</h3>
+    <LineChart @ref="_lineChart" TItem="int" />
+}
 
 @code {
+    private LineChart<int> _lineChart;
+    private List<WeeklyReps> _weeklyReps;
+
+    // Get current user ID to load correct workout history
+    [CascadingParameter]
+    private Task<AuthenticationState> _authenticationStateTask { get; set; }
+    private string _currentUserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await _authenticationStateTask).User;
+        var currentUser = await UserManager.GetUserAsync(user);
+        _currentUserId = currentUser.Id;
+
+        _weeklyReps = await WorkoutLogStorage.GetWeeklyRepsAsync(_currentUserId);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && _weeklyReps != null)
+        {
+            await PlotData();
+        }
+    }
+
+    async Task PlotData()
+    {
+        string[] labels = _weeklyReps.Select(wr => wr.StartDate.ToShortDateString()).ToArray();
+        await _lineChart.AddLabelsDatasetsAndUpdate(labels, GetLineChartDataset());
+    }
+
+    
+
+    private LineChartDataset<int> GetLineChartDataset()
+    {
+        return new LineChartDataset<int>
+        {
+            Label = "Total Reps",
+            Fill = true,
+            BackgroundColor = "rgba(255, 99, 132, 0.2)",
+            BorderColor = "rgba(255,99,132,1)",
+            BorderWidth = 1,
+            Data = _weeklyReps.Select(wr => wr.TotalReps).ToList()
+
+        };
+    }
 
 }

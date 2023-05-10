@@ -13,27 +13,25 @@ else // TODO: Show exercise listing as BS5 cards (smaller)
 {
     <p>A complete listing of all @_exercises.Count() exercises.</p>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Exercise</th>
-                <th>Body Part</th>
-                <th>Target Muscle</th>
-                <th>Demonstration</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
+        <div class="row">
             @foreach (var ex in _exercises)
             {
-                <tr>
-                    <td>@ex.Name</td>
-                    <td>@ex.BodyPart</td>
-                    <td>@ex.TargetMuscle</td>
-                    <td><img src="@ex.GifUrl"></td>
-                </tr>
+                <div class="col-lg-4 col-md-6 mb-4 p-2">
+                    <div class="card" style="max-width:350px; min-width:250px;">
+                        <img class="card-img-bottom" src="@ex.GifUrl" alt="Exercise image">
+                        <div class="card-body">
+                            <h4 class="card-title">@ex.Name.ToUpper()</h4>
+                            <p class="card-text">
+                                <strong>BODY PART:</strong>&nbsp;@ex.BodyPart.ToUpper()<br />
+                                <strong>TARGET MUSCLE:</strong>&nbsp;@ex.TargetMuscle.ToUpper()
+                            </p>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 }
 
 @code {

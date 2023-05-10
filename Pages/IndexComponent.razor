@@ -6,19 +6,9 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Components.Authorization
 
-
-<br />
-
-<div class="text-center"><h1>AnywhereFit</h1></div>
-
 <br />
 
 <p class="text-center">Welcome to AnywhereFit! This app is designed to guide you through a quick and effective workout that you can do anywhere without a gym or equipment. Make a selection below to get started.</p>
-@if (currentUserId != null)
-{
-    <p>Your user ID is: @currentUserId</p>
-}
-
 
 <br />
 <br />
@@ -49,7 +39,9 @@
     </div>
 </div>
 
-@* TODO: Add link to view all available exercises. *@
+<br />
+
+<Footer />
 
 @code {
     [CascadingParameter]

@@ -12,9 +12,11 @@ namespace AnywhereFit.Data
         public string Name { get; set; } = null!;
         public string BodyPart { get; set; } = null!;
         public string TargetMuscle { get; set; } = null!;
-        public string? Equipment { get; set; }
-        public int? Reps { get; set; }
-        public DateTime? DateTime { get; set; }
-        public string? UserId { get; set; }
+        public string Equipment { get; set; }
+
+        [Required]
+        public int Reps { get; set; }
+        public DateTime DateTime { get; set; }
+        public string UserId { get; set; } = null!;
     }
 }

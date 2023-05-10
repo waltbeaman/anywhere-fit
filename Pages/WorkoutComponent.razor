@@ -45,31 +45,32 @@ else if (workoutState == _workoutState.Created)
     }
     else
     {
+        <h5>Are you ready to get after it?</h5><br />
         <p>
-            Are you ready to get after it?
-            <button type="submit" class="btn btn-success" @onclick="StartWorkout">Start Workout</button>
+            When you click the start workout button, you will have an exercise timer set for 1 minute of work and 10 seconds of rest.
+            Be sure to add the number of reps you've completed before moving onto the next exercise.
         </p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Exercise</th>
-                    <th>Body Part</th>
-                    <th>Target Muscle</th>
-                    <th>Demonstration</th>
-                </tr>
-            </thead>
-            <tbody>
+        <button type="submit" class="btn btn-success" @onclick="StartWorkout">Start Workout</button>
+        <hr />
+        <div class="container">
+            <div class="row">
                 @foreach (var ex in _exercises)
                 {
-                    <tr>
-                        <td>@ex.Name.ToUpper()</td>
-                        <td>@ex.BodyPart.ToUpper()</td>
-                        <td>@ex.TargetMuscle.ToUpper()</td>
-                        <td><img src="@ex.GifUrl"></td>
-                    </tr>
+                    <div class="col-lg-4 col-md-6 mb-4 p-2">
+                        <div class="card" style="max-width:450px; min-width:250px;">
+                            <img class="card-img-bottom" src="@ex.GifUrl" alt="Exercise image">
+                            <div class="card-body">
+                                <h4 class="card-title">@ex.Name.ToUpper()</h4>
+                                <p class="card-text">
+                                    <strong>BODY PART:</strong>&nbsp;@ex.BodyPart.ToUpper()<br />
+                                    <strong>TARGET MUSCLE:</strong>&nbsp;@ex.TargetMuscle.ToUpper()
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
     }
 
 }

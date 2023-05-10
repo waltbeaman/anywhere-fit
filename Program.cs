@@ -12,6 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Net;
 using Microsoft.AspNetCore.Components.Authorization;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Charts;
+using Blazorise.Icons.FontAwesome;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -23,6 +27,10 @@ builder.Services.AddHttpClient<ExerciseService>();
 builder.Services.AddDbContext<AnywhereFitContext>(options => options.UseSqlite(connectionString));
 builder.Services.AddScoped<IWorkoutLogStorage, WorkoutLogStorage>();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AnywhereFitContext>();
+
+builder.Services.AddBlazorise();
+builder.Services.AddBootstrapProviders();
+builder.Services.AddFontAwesomeIcons();
 
 var app = builder.Build();
 

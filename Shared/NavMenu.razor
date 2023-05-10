@@ -19,23 +19,23 @@
                         <span class="oi oi-home" aria-hidden="true"></span> Home
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
+                <div class="nav-item px-3" href="#">
                     <NavLink class="nav-link" href="workout">
-                        <span class="oi oi-plus" aria-hidden="true"></span> New Workout
+                        <span class="oi oi-plus" aria-hidden="true"></span> Workout
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="viewprogress">
-                        <span class="oi oi-graph" aria-hidden="true"></span> View Progress
+                        <span class="oi oi-graph" aria-hidden="true"></span> Progress
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="allexercises">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> View All Exercises
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Exercises
                     </NavLink>
                 </div>
-                <hr />
-                <div class="nav-item px-3">
+                <hr class="border border-2 border-light" style="width: 95%; margin: 0 auto;" />
+                <div class="nav-item px-3" style="margin-top:6px;">
                     <NavLink class="nav-link" href="logout">
                         <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
                     </NavLink>
@@ -59,7 +59,6 @@
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()

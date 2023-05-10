@@ -1,8 +1,4 @@
-﻿@using AnywhereFit.Data
-@using System.Timers
-@using Microsoft.AspNetCore.Identity
-
-@inject UserManager<IdentityUser> UserManager
+﻿@inject UserManager<IdentityUser> UserManager
 @inject NavigationManager NavigationManager
 @inject ExerciseService ExerciseService
 @inject IWorkoutLogStorage WorkoutLogStorage
@@ -15,6 +11,7 @@
 }
 else
 {
+    <h2>Completed Exercises (Last 90 Days)</h2>
     <table class="table">
         <thead>
             <tr>
@@ -29,7 +26,7 @@ else
             @foreach (var ex in _completedExercises)
             {
                 <tr>
-                    <td>@ex.DateTime.ToString()</td>
+                    <td>@ex.DateTime.ToString("d")</td>
                     <td>@ex.Name.ToUpper()</td>
                     <td>@ex.BodyPart.ToUpper()</td>
                     <td>@ex.TargetMuscle.ToUpper()</td>
